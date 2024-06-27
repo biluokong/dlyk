@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TTranRemarkMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TTranRemark">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="tranId" column="tran_id" jdbcType="INTEGER"/>
+            <result property="noteWay" column="note_way" jdbcType="INTEGER"/>
+            <result property="noteContent" column="note_content" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tran_id,note_way,
+        note_content,create_time,create_by,
+        edit_time,edit_by,deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_tran_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_tran_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TTranRemark" useGeneratedKeys="true">
+        insert into t_tran_remark
+        ( id,tran_id,note_way
+        ,note_content,create_time,create_by
+        ,edit_time,edit_by,deleted
+        )
+        values (#{id,jdbcType=INTEGER},#{tranId,jdbcType=INTEGER},#{noteWay,jdbcType=INTEGER}
+        ,#{noteContent,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER}
+        ,#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER},#{deleted,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TTranRemark" useGeneratedKeys="true">
+        insert into t_tran_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="tranId != null">tran_id,</if>
+                <if test="noteWay != null">note_way,</if>
+                <if test="noteContent != null">note_content,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+                <if test="deleted != null">deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="tranId != null">#{tranId,jdbcType=INTEGER},</if>
+                <if test="noteWay != null">#{noteWay,jdbcType=INTEGER},</if>
+                <if test="noteContent != null">#{noteContent,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+                <if test="deleted != null">#{deleted,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TTranRemark">
+        update t_tran_remark
+        <set>
+                <if test="tranId != null">
+                    tran_id = #{tranId,jdbcType=INTEGER},
+                </if>
+                <if test="noteWay != null">
+                    note_way = #{noteWay,jdbcType=INTEGER},
+                </if>
+                <if test="noteContent != null">
+                    note_content = #{noteContent,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+                <if test="deleted != null">
+                    deleted = #{deleted,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TTranRemark">
+        update t_tran_remark
+        set 
+            tran_id =  #{tranId,jdbcType=INTEGER},
+            note_way =  #{noteWay,jdbcType=INTEGER},
+            note_content =  #{noteContent,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER},
+            deleted =  #{deleted,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

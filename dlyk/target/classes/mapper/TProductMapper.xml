@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TProduct">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="guidePriceS" column="guide_price_s" jdbcType="DECIMAL"/>
+            <result property="guidePriceE" column="guide_price_e" jdbcType="DECIMAL"/>
+            <result property="quotation" column="quotation" jdbcType="DECIMAL"/>
+            <result property="state" column="state" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,guide_price_s,
+        guide_price_e,quotation,state,
+        create_time,create_by,edit_time,
+        edit_by
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_product
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+  
+	<select id="selectAllOnSaleProduct" resultType="com.biluo.model.po.TProduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_product
+    where state = 0
+  </select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_product
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TProduct" useGeneratedKeys="true">
+        insert into t_product
+        ( id,name,guide_price_s
+        ,guide_price_e,quotation,state
+        ,create_time,create_by,edit_time
+        ,edit_by)
+        values (#{id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{guidePriceS,jdbcType=DECIMAL}
+        ,#{guidePriceE,jdbcType=DECIMAL},#{quotation,jdbcType=DECIMAL},#{state,jdbcType=INTEGER}
+        ,#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER},#{editTime,jdbcType=TIMESTAMP}
+        ,#{editBy,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TProduct" useGeneratedKeys="true">
+        insert into t_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="name != null">name,</if>
+                <if test="guidePriceS != null">guide_price_s,</if>
+                <if test="guidePriceE != null">guide_price_e,</if>
+                <if test="quotation != null">quotation,</if>
+                <if test="state != null">state,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+                <if test="guidePriceS != null">#{guidePriceS,jdbcType=DECIMAL},</if>
+                <if test="guidePriceE != null">#{guidePriceE,jdbcType=DECIMAL},</if>
+                <if test="quotation != null">#{quotation,jdbcType=DECIMAL},</if>
+                <if test="state != null">#{state,jdbcType=INTEGER},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TProduct">
+        update t_product
+        <set>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="guidePriceS != null">
+                    guide_price_s = #{guidePriceS,jdbcType=DECIMAL},
+                </if>
+                <if test="guidePriceE != null">
+                    guide_price_e = #{guidePriceE,jdbcType=DECIMAL},
+                </if>
+                <if test="quotation != null">
+                    quotation = #{quotation,jdbcType=DECIMAL},
+                </if>
+                <if test="state != null">
+                    state = #{state,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TProduct">
+        update t_product
+        set 
+            name =  #{name,jdbcType=VARCHAR},
+            guide_price_s =  #{guidePriceS,jdbcType=DECIMAL},
+            guide_price_e =  #{guidePriceE,jdbcType=DECIMAL},
+            quotation =  #{quotation,jdbcType=DECIMAL},
+            state =  #{state,jdbcType=INTEGER},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

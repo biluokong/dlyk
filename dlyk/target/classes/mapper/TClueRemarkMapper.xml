@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TClueRemarkMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TClueRemark">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="clueId" column="clue_id" jdbcType="INTEGER"/>
+            <result property="noteWay" column="note_way" jdbcType="INTEGER"/>
+            <result property="noteContent" column="note_content" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,clue_id,note_way,
+        note_content,create_time,create_by,
+        edit_time,edit_by,deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_clue_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+  
+  <resultMap id="clueRemarkDtoResultMap" type="com.biluo.model.dto.ClueRemarkDto">
+    <id property="id" column="id" jdbcType="INTEGER"/>
+    <result property="clueId" column="clue_id" jdbcType="INTEGER"/>
+    <result property="noteWay" column="note_way" jdbcType="INTEGER"/>
+    <result property="noteWayName" column="noteWayName" jdbcType="VARCHAR"/>
+    <result property="noteContent" column="note_content" jdbcType="VARCHAR"/>
+    <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+    <result property="createName" column="createName" jdbcType="VARCHAR"/>
+    <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+    <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    <result property="editName" column="editName" jdbcType="VARCHAR"/>
+    <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+  </resultMap>
+  
+	<select id="listByClueId" resultType="com.biluo.model.dto.ClueRemarkDto" resultMap="clueRemarkDtoResultMap">
+    select
+        tcr.*,
+        tu1.name as createName,
+        tu2.name as editName,
+        tdv.type_value noteWayName
+    from t_clue_remark tcr
+        left join t_user tu1 on tcr.create_by = tu1.id
+        left join t_user tu2 on tcr.edit_by = tu2.id
+        left join t_dic_value tdv on tcr.note_way = tdv.id
+    <where>
+      tcr.clue_id = #{clueId} and (tcr.deleted = 0 or tcr.deleted is null)
+      ${filterSQL}
+    </where>
+  </select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_clue_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TClueRemark" useGeneratedKeys="true">
+        insert into t_clue_remark
+        ( id,clue_id,note_way
+        ,note_content,create_time,create_by
+        ,edit_time,edit_by,deleted
+        )
+        values (#{id,jdbcType=INTEGER},#{clueId,jdbcType=INTEGER},#{noteWay,jdbcType=INTEGER}
+        ,#{noteContent,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER}
+        ,#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER},#{deleted,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TClueRemark" useGeneratedKeys="true">
+        insert into t_clue_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="clueId != null">clue_id,</if>
+                <if test="noteWay != null">note_way,</if>
+                <if test="noteContent != null">note_content,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+                <if test="deleted != null">deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="clueId != null">#{clueId,jdbcType=INTEGER},</if>
+                <if test="noteWay != null">#{noteWay,jdbcType=INTEGER},</if>
+                <if test="noteContent != null">#{noteContent,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+                <if test="deleted != null">#{deleted,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TClueRemark">
+        update t_clue_remark
+        <set>
+                <if test="clueId != null">
+                    clue_id = #{clueId,jdbcType=INTEGER},
+                </if>
+                <if test="noteWay != null">
+                    note_way = #{noteWay,jdbcType=INTEGER},
+                </if>
+                <if test="noteContent != null">
+                    note_content = #{noteContent,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+                <if test="deleted != null">
+                    deleted = #{deleted,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TClueRemark">
+        update t_clue_remark
+        set 
+            clue_id =  #{clueId,jdbcType=INTEGER},
+            note_way =  #{noteWay,jdbcType=INTEGER},
+            note_content =  #{noteContent,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER},
+            deleted =  #{deleted,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

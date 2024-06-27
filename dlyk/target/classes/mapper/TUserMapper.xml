@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TUser">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="loginAct" column="login_act" jdbcType="VARCHAR"/>
+            <result property="loginPwd" column="login_pwd" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="accountNoExpired" column="account_no_expired" jdbcType="INTEGER"/>
+            <result property="credentialsNoExpired" column="credentials_no_expired" jdbcType="INTEGER"/>
+            <result property="accountNoLocked" column="account_no_locked" jdbcType="INTEGER"/>
+            <result property="accountEnabled" column="account_enabled" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,login_act,login_pwd,
+        name,phone,email,
+        account_no_expired,credentials_no_expired,account_no_locked,
+        account_enabled,create_time,create_by,
+        edit_time,edit_by,last_login_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_user
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+	<select id="selectByLoginAct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where  login_act = #{username}
+  </select>
+
+  <select id="list" resultType="com.biluo.model.po.TUser" resultMap="BaseResultMap">
+    select
+      id,login_act,
+      name,phone,email,
+      account_no_expired,credentials_no_expired,account_no_locked,
+      account_enabled,create_time,create_by,
+      edit_time,edit_by,last_login_time
+    from t_user tu
+    <where>
+      ${filterSQL}
+    </where>
+  </select>
+
+  <resultMap id="userDtoResultMap" type="com.biluo.model.dto.UserDto">
+    <id property="id" column="id" jdbcType="INTEGER"/>
+    <result property="loginAct" column="login_act" jdbcType="VARCHAR"/>
+    <result property="name" column="name" jdbcType="VARCHAR"/>
+    <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    <result property="email" column="email" jdbcType="VARCHAR"/>
+    <result property="accountNoExpired" column="account_no_expired" jdbcType="INTEGER"/>
+    <result property="credentialsNoExpired" column="credentials_no_expired" jdbcType="INTEGER"/>
+    <result property="accountNoLocked" column="account_no_locked" jdbcType="INTEGER"/>
+    <result property="accountEnabled" column="account_enabled" jdbcType="INTEGER"/>
+    <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+    <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+    <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+    <result property="createId" column="createById" jdbcType="INTEGER"/>
+    <result property="createName" column="createByName" jdbcType="VARCHAR"/>
+    <result property="editId" column="editById" jdbcType="INTEGER"/>
+    <result property="editName" column="editByName" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getUserDetail" resultType="com.biluo.model.po.TUser" resultMap="userDtoResultMap">
+    select
+      tu1.*,
+      tu2.id createById,
+      tu2.name createByName,
+      tu3.id editById,
+      tu3.name editByName
+    from
+      t_user tu1
+        left join t_user tu2 on tu1.create_by = tu2.id
+        left join t_user tu3 on tu1.edit_by = tu3.id
+    where
+      tu1.id = #{id}
+  </select>
+
+  <select id="getAllUser" resultType="com.biluo.model.po.TUser" resultMap="BaseResultMap">
+      select
+          id, name
+      from t_user
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_user
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+
+  <delete id="deleteByIds">
+    delete from t_user
+    where id in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TUser" useGeneratedKeys="true">
+        insert into t_user
+        ( id,login_act,login_pwd
+        ,name,phone,email
+        ,account_no_expired,credentials_no_expired,account_no_locked
+        ,account_enabled,create_time,create_by
+        ,edit_time,edit_by,last_login_time
+        )
+        values (#{id,jdbcType=INTEGER},#{loginAct,jdbcType=VARCHAR},#{loginPwd,jdbcType=VARCHAR}
+        ,#{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}
+        ,#{accountNoExpired,jdbcType=INTEGER},#{credentialsNoExpired,jdbcType=INTEGER},#{accountNoLocked,jdbcType=INTEGER}
+        ,#{accountEnabled,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER}
+        ,#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER},#{lastLoginTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TUser" useGeneratedKeys="true">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="loginAct != null">login_act,</if>
+                <if test="loginPwd != null">login_pwd,</if>
+                <if test="name != null">name,</if>
+                <if test="phone != null">phone,</if>
+                <if test="email != null">email,</if>
+                <if test="accountNoExpired != null">account_no_expired,</if>
+                <if test="credentialsNoExpired != null">credentials_no_expired,</if>
+                <if test="accountNoLocked != null">account_no_locked,</if>
+                <if test="accountEnabled != null">account_enabled,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+                <if test="lastLoginTime != null">last_login_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="loginAct != null">#{loginAct,jdbcType=VARCHAR},</if>
+                <if test="loginPwd != null">#{loginPwd,jdbcType=VARCHAR},</if>
+                <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+                <if test="phone != null">#{phone,jdbcType=VARCHAR},</if>
+                <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+                <if test="accountNoExpired != null">#{accountNoExpired,jdbcType=INTEGER},</if>
+                <if test="credentialsNoExpired != null">#{credentialsNoExpired,jdbcType=INTEGER},</if>
+                <if test="accountNoLocked != null">#{accountNoLocked,jdbcType=INTEGER},</if>
+                <if test="accountEnabled != null">#{accountEnabled,jdbcType=INTEGER},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+                <if test="lastLoginTime != null">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TUser">
+        update t_user
+        <set>
+                <if test="loginAct != null">
+                    login_act = #{loginAct,jdbcType=VARCHAR},
+                </if>
+                <if test="loginPwd != null and loginPwd != ''">
+                    login_pwd = #{loginPwd,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="phone != null">
+                    phone = #{phone,jdbcType=VARCHAR},
+                </if>
+                <if test="email != null">
+                    email = #{email,jdbcType=VARCHAR},
+                </if>
+                <if test="accountNoExpired != null">
+                    account_no_expired = #{accountNoExpired,jdbcType=INTEGER},
+                </if>
+                <if test="credentialsNoExpired != null">
+                    credentials_no_expired = #{credentialsNoExpired,jdbcType=INTEGER},
+                </if>
+                <if test="accountNoLocked != null">
+                    account_no_locked = #{accountNoLocked,jdbcType=INTEGER},
+                </if>
+                <if test="accountEnabled != null">
+                    account_enabled = #{accountEnabled,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+                <if test="lastLoginTime != null">
+                    last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TUser">
+        update t_user
+        set 
+            login_act =  #{loginAct,jdbcType=VARCHAR},
+            login_pwd =  #{loginPwd,jdbcType=VARCHAR},
+            name =  #{name,jdbcType=VARCHAR},
+            phone =  #{phone,jdbcType=VARCHAR},
+            email =  #{email,jdbcType=VARCHAR},
+            account_no_expired =  #{accountNoExpired,jdbcType=INTEGER},
+            credentials_no_expired =  #{credentialsNoExpired,jdbcType=INTEGER},
+            account_no_locked =  #{accountNoLocked,jdbcType=INTEGER},
+            account_enabled =  #{accountEnabled,jdbcType=INTEGER},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER},
+            last_login_time =  #{lastLoginTime,jdbcType=TIMESTAMP}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

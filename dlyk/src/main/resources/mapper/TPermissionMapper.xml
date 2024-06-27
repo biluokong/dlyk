@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TPermissionMapper">
+	
+	<resultMap id="BaseResultMap" type="com.biluo.model.po.TPermission">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="code" column="code" jdbcType="VARCHAR" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="VARCHAR" />
+		<result property="parentId" column="parent_id" jdbcType="INTEGER" />
+		<result property="orderNo" column="order_no" jdbcType="INTEGER" />
+		<result property="icon" column="icon" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id,name,code,
+        url,type,parent_id,
+        order_no,icon
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_permission
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<resultMap id="permissionResultMap" type="com.biluo.model.po.TPermission">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="code" column="code" jdbcType="VARCHAR" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="VARCHAR" />
+		<result property="parentId" column="parent_id" jdbcType="INTEGER" />
+		<result property="orderNo" column="order_no" jdbcType="INTEGER" />
+		<result property="icon" column="icon" jdbcType="VARCHAR" />
+		<collection property="subPermissionList" ofType="com.biluo.model.po.TPermission">
+			<id property="id" column="c_id" jdbcType="INTEGER" />
+			<result property="name" column="c_name" jdbcType="VARCHAR" />
+			<result property="url" column="c_url" jdbcType="VARCHAR" />
+			<result property="icon" column="c_icon" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	<select id="menuListByUserId" resultType="com.biluo.model.po.TPermission" resultMap="permissionResultMap">
+		select tp.*,
+		       childTp.id   as c_id,
+		       childTp.name as c_name,
+		       childTp.url  as c_url,
+		       childTp.icon as c_icon
+		from t_permission tp
+			     left join t_permission childTp on tp.id = childTp.parent_id
+			     left join t_role_permission trp on tp.id = trp.permission_id
+			     left join t_role tr on trp.role_id = tr.id
+			     left join t_user_role tur on tr.id = tur.role_id
+		where tur.user_id = #{userId}
+			and tp.type = 'menu'
+			and childTp.type = 'menu'
+	</select>
+	
+	<select id="buttonListByUserId" resultType="com.biluo.model.po.TPermission" resultMap="permissionResultMap">
+		select tp.*
+		from t_permission tp
+	     left join t_role_permission trp on tp.id = trp.permission_id
+	     left join t_role tr on trp.role_id = tr.id
+	     left join t_user_role tur on tr.id = tur.role_id
+		where tur.user_id = #{userId}
+			and tp.type = 'button'
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete
+		from t_permission
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TPermission"
+	        useGeneratedKeys="true">
+		insert into t_permission
+		( id, name, code
+		, url, type, parent_id
+		, order_no, icon)
+		values ( #{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}
+		       , #{url,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}
+		       , #{orderNo,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TPermission"
+	        useGeneratedKeys="true">
+		insert into t_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="name != null">name,</if>
+			<if test="code != null">code,</if>
+			<if test="url != null">url,</if>
+			<if test="type != null">type,</if>
+			<if test="parentId != null">parent_id,</if>
+			<if test="orderNo != null">order_no,</if>
+			<if test="icon != null">icon,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id,jdbcType=INTEGER},</if>
+			<if test="name != null">#{name,jdbcType=VARCHAR},</if>
+			<if test="code != null">#{code,jdbcType=VARCHAR},</if>
+			<if test="url != null">#{url,jdbcType=VARCHAR},</if>
+			<if test="type != null">#{type,jdbcType=VARCHAR},</if>
+			<if test="parentId != null">#{parentId,jdbcType=INTEGER},</if>
+			<if test="orderNo != null">#{orderNo,jdbcType=INTEGER},</if>
+			<if test="icon != null">#{icon,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TPermission">
+		update t_permission
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=INTEGER},
+			</if>
+			<if test="icon != null">
+				icon = #{icon,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TPermission">
+		update t_permission
+		set name      = #{name,jdbcType=VARCHAR},
+		    code      = #{code,jdbcType=VARCHAR},
+		    url       = #{url,jdbcType=VARCHAR},
+		    type      = #{type,jdbcType=VARCHAR},
+		    parent_id = #{parentId,jdbcType=INTEGER},
+		    order_no  = #{orderNo,jdbcType=INTEGER},
+		    icon      = #{icon,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TDicValueMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TDicValue">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="typeCode" column="type_code" jdbcType="VARCHAR"/>
+            <result property="typeValue" column="type_value" jdbcType="VARCHAR"/>
+            <result property="order" column="order" jdbcType="INTEGER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,type_code,type_value,
+        order,remark
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_dic_value
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_dic_value
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TDicValue" useGeneratedKeys="true">
+        insert into t_dic_value
+        ( id,type_code,type_value
+        ,order,remark)
+        values (#{id,jdbcType=INTEGER},#{typeCode,jdbcType=VARCHAR},#{typeValue,jdbcType=VARCHAR}
+        ,#{order,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TDicValue" useGeneratedKeys="true">
+        insert into t_dic_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="typeCode != null">type_code,</if>
+                <if test="typeValue != null">type_value,</if>
+                <if test="order != null">order,</if>
+                <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="typeCode != null">#{typeCode,jdbcType=VARCHAR},</if>
+                <if test="typeValue != null">#{typeValue,jdbcType=VARCHAR},</if>
+                <if test="order != null">#{order,jdbcType=INTEGER},</if>
+                <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TDicValue">
+        update t_dic_value
+        <set>
+                <if test="typeCode != null">
+                    type_code = #{typeCode,jdbcType=VARCHAR},
+                </if>
+                <if test="typeValue != null">
+                    type_value = #{typeValue,jdbcType=VARCHAR},
+                </if>
+                <if test="order != null">
+                    order = #{order,jdbcType=INTEGER},
+                </if>
+                <if test="remark != null">
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TDicValue">
+        update t_dic_value
+        set 
+            type_code =  #{typeCode,jdbcType=VARCHAR},
+            type_value =  #{typeValue,jdbcType=VARCHAR},
+            order =  #{order,jdbcType=INTEGER},
+            remark =  #{remark,jdbcType=VARCHAR}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

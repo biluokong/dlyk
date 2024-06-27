@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TDicTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TDicType">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="typeCode" column="type_code" jdbcType="VARCHAR"/>
+            <result property="typeName" column="type_name" jdbcType="VARCHAR"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,type_code,type_name,
+        remark
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_dic_type
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+  
+  <resultMap id="dictDtoResultMap" type="com.biluo.model.dto.DictDto">
+    <id property="id" column="id" jdbcType="INTEGER"/>
+    <result property="typeCode" column="type_code" jdbcType="VARCHAR"/>
+    <result property="typeName" column="type_name" jdbcType="VARCHAR"/>
+    <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    <collection property="valueList" ofType="com.biluo.model.po.TDicValue">
+      <id property="id" column="valueId" jdbcType="INTEGER"/>
+      <result property="typeValue" column="typeValue" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+  
+	<select id="selectAll" resultType="com.biluo.model.dto.DictDto" resultMap="dictDtoResultMap">
+      select
+          tdt.*,
+          tdv.id as valueId, tdv.type_value as typeValue
+      from t_dic_type tdt left join t_dic_value tdv on tdt.type_code = tdv.type_code
+  </select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_dic_type
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TDicType" useGeneratedKeys="true">
+        insert into t_dic_type
+        ( id,type_code,type_name
+        ,remark)
+        values (#{id,jdbcType=INTEGER},#{typeCode,jdbcType=VARCHAR},#{typeName,jdbcType=VARCHAR}
+        ,#{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TDicType" useGeneratedKeys="true">
+        insert into t_dic_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="typeCode != null">type_code,</if>
+                <if test="typeName != null">type_name,</if>
+                <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="typeCode != null">#{typeCode,jdbcType=VARCHAR},</if>
+                <if test="typeName != null">#{typeName,jdbcType=VARCHAR},</if>
+                <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TDicType">
+        update t_dic_type
+        <set>
+                <if test="typeCode != null">
+                    type_code = #{typeCode,jdbcType=VARCHAR},
+                </if>
+                <if test="typeName != null">
+                    type_name = #{typeName,jdbcType=VARCHAR},
+                </if>
+                <if test="remark != null">
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TDicType">
+        update t_dic_type
+        set 
+            type_code =  #{typeCode,jdbcType=VARCHAR},
+            type_name =  #{typeName,jdbcType=VARCHAR},
+            remark =  #{remark,jdbcType=VARCHAR}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

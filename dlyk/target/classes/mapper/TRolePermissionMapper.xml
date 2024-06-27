@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TRolePermissionMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TRolePermission">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+            <result property="permissionId" column="permission_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,role_id,permission_id
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_role_permission
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_role_permission
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TRolePermission" useGeneratedKeys="true">
+        insert into t_role_permission
+        ( id,role_id,permission_id
+        )
+        values (#{id,jdbcType=INTEGER},#{roleId,jdbcType=INTEGER},#{permissionId,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TRolePermission" useGeneratedKeys="true">
+        insert into t_role_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="roleId != null">role_id,</if>
+                <if test="permissionId != null">permission_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="roleId != null">#{roleId,jdbcType=INTEGER},</if>
+                <if test="permissionId != null">#{permissionId,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TRolePermission">
+        update t_role_permission
+        <set>
+                <if test="roleId != null">
+                    role_id = #{roleId,jdbcType=INTEGER},
+                </if>
+                <if test="permissionId != null">
+                    permission_id = #{permissionId,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TRolePermission">
+        update t_role_permission
+        set 
+            role_id =  #{roleId,jdbcType=INTEGER},
+            permission_id =  #{permissionId,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

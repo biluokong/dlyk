@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+#配置数据库连接相关信息
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dlyk?useUnicode=true&characterEncoding=utf8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ${common-pwd}
+    hikari:
+      #最大连接数，默认是10
+      maximum-pool-size: 30
+      #最小空闲连接，默认是10
+      minimum-idle: 30
+      #等待连接池分配连接的最大时长，超过该时长还没有可用连接则发生超时异常（单位毫秒）
+      connection-timeout: 5000
+      #空闲连接的最大时长，空闲多久就被释放回收，设置为0不让连接回收
+      idle-timeout: 0
+      #一个连接的最大生命时间，超过该时间还没有使用就回收掉（单位毫秒），最好不要超过8小时
+      max-lifetime: 18000000
+
+
+  #配置redis的连接信息
+  data:
+    redis:
+      host: ${redis-host}
+      port: 6379
+      password: ${common-pwd}
+
+  #设置jackson返回json数据时，时区和格式
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+#指定一下mapper.xml文件的位置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    #在控制台打印sql语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#定义定时任务的调度时间
+project:
+  task:
+    cron: '0 0/5 * * * ?'
+#    delay: 180000

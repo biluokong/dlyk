@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TSystemInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TSystemInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="systemCode" column="system_code" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="site" column="site" jdbcType="VARCHAR"/>
+            <result property="logo" column="logo" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="keywords" column="keywords" jdbcType="VARCHAR"/>
+            <result property="shortcuticon" column="shortcuticon" jdbcType="VARCHAR"/>
+            <result property="tel" column="tel" jdbcType="VARCHAR"/>
+            <result property="weixin" column="weixin" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="version" column="version" jdbcType="VARCHAR"/>
+            <result property="closemsg" column="closeMsg" jdbcType="VARCHAR"/>
+            <result property="isopen" column="isopen" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,system_code,name,
+        site,logo,title,
+        description,keywords,shortcuticon,
+        tel,weixin,email,
+        address,version,closeMsg,
+        isopen,create_time,create_by,
+        edit_time,edit_by
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_system_info
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_system_info
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TSystemInfo" useGeneratedKeys="true">
+        insert into t_system_info
+        ( id,system_code,name
+        ,site,logo,title
+        ,description,keywords,shortcuticon
+        ,tel,weixin,email
+        ,address,version,closeMsg
+        ,isopen,create_time,create_by
+        ,edit_time,edit_by)
+        values (#{id,jdbcType=INTEGER},#{systemCode,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}
+        ,#{site,jdbcType=VARCHAR},#{logo,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR}
+        ,#{description,jdbcType=VARCHAR},#{keywords,jdbcType=VARCHAR},#{shortcuticon,jdbcType=VARCHAR}
+        ,#{tel,jdbcType=VARCHAR},#{weixin,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}
+        ,#{address,jdbcType=VARCHAR},#{version,jdbcType=VARCHAR},#{closemsg,jdbcType=VARCHAR}
+        ,#{isopen,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER}
+        ,#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TSystemInfo" useGeneratedKeys="true">
+        insert into t_system_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="systemCode != null">system_code,</if>
+                <if test="name != null">name,</if>
+                <if test="site != null">site,</if>
+                <if test="logo != null">logo,</if>
+                <if test="title != null">title,</if>
+                <if test="description != null">description,</if>
+                <if test="keywords != null">keywords,</if>
+                <if test="shortcuticon != null">shortcuticon,</if>
+                <if test="tel != null">tel,</if>
+                <if test="weixin != null">weixin,</if>
+                <if test="email != null">email,</if>
+                <if test="address != null">address,</if>
+                <if test="version != null">version,</if>
+                <if test="closemsg != null">closeMsg,</if>
+                <if test="isopen != null">isopen,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="systemCode != null">#{systemCode,jdbcType=VARCHAR},</if>
+                <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+                <if test="site != null">#{site,jdbcType=VARCHAR},</if>
+                <if test="logo != null">#{logo,jdbcType=VARCHAR},</if>
+                <if test="title != null">#{title,jdbcType=VARCHAR},</if>
+                <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+                <if test="keywords != null">#{keywords,jdbcType=VARCHAR},</if>
+                <if test="shortcuticon != null">#{shortcuticon,jdbcType=VARCHAR},</if>
+                <if test="tel != null">#{tel,jdbcType=VARCHAR},</if>
+                <if test="weixin != null">#{weixin,jdbcType=VARCHAR},</if>
+                <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+                <if test="address != null">#{address,jdbcType=VARCHAR},</if>
+                <if test="version != null">#{version,jdbcType=VARCHAR},</if>
+                <if test="closemsg != null">#{closemsg,jdbcType=VARCHAR},</if>
+                <if test="isopen != null">#{isopen,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TSystemInfo">
+        update t_system_info
+        <set>
+                <if test="systemCode != null">
+                    system_code = #{systemCode,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="site != null">
+                    site = #{site,jdbcType=VARCHAR},
+                </if>
+                <if test="logo != null">
+                    logo = #{logo,jdbcType=VARCHAR},
+                </if>
+                <if test="title != null">
+                    title = #{title,jdbcType=VARCHAR},
+                </if>
+                <if test="description != null">
+                    description = #{description,jdbcType=VARCHAR},
+                </if>
+                <if test="keywords != null">
+                    keywords = #{keywords,jdbcType=VARCHAR},
+                </if>
+                <if test="shortcuticon != null">
+                    shortcuticon = #{shortcuticon,jdbcType=VARCHAR},
+                </if>
+                <if test="tel != null">
+                    tel = #{tel,jdbcType=VARCHAR},
+                </if>
+                <if test="weixin != null">
+                    weixin = #{weixin,jdbcType=VARCHAR},
+                </if>
+                <if test="email != null">
+                    email = #{email,jdbcType=VARCHAR},
+                </if>
+                <if test="address != null">
+                    address = #{address,jdbcType=VARCHAR},
+                </if>
+                <if test="version != null">
+                    version = #{version,jdbcType=VARCHAR},
+                </if>
+                <if test="closemsg != null">
+                    closeMsg = #{closemsg,jdbcType=VARCHAR},
+                </if>
+                <if test="isopen != null">
+                    isopen = #{isopen,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TSystemInfo">
+        update t_system_info
+        set 
+            system_code =  #{systemCode,jdbcType=VARCHAR},
+            name =  #{name,jdbcType=VARCHAR},
+            site =  #{site,jdbcType=VARCHAR},
+            logo =  #{logo,jdbcType=VARCHAR},
+            title =  #{title,jdbcType=VARCHAR},
+            description =  #{description,jdbcType=VARCHAR},
+            keywords =  #{keywords,jdbcType=VARCHAR},
+            shortcuticon =  #{shortcuticon,jdbcType=VARCHAR},
+            tel =  #{tel,jdbcType=VARCHAR},
+            weixin =  #{weixin,jdbcType=VARCHAR},
+            email =  #{email,jdbcType=VARCHAR},
+            address =  #{address,jdbcType=VARCHAR},
+            version =  #{version,jdbcType=VARCHAR},
+            closeMsg =  #{closemsg,jdbcType=VARCHAR},
+            isopen =  #{isopen,jdbcType=VARCHAR},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

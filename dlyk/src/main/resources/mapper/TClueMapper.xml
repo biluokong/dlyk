@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TClueMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TClue">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="ownerId" column="owner_id" jdbcType="INTEGER"/>
+            <result property="activityId" column="activity_id" jdbcType="INTEGER"/>
+            <result property="fullName" column="full_name" jdbcType="VARCHAR"/>
+            <result property="appellation" column="appellation" jdbcType="INTEGER"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="weixin" column="weixin" jdbcType="VARCHAR"/>
+            <result property="qq" column="qq" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="age" column="age" jdbcType="INTEGER"/>
+            <result property="job" column="job" jdbcType="VARCHAR"/>
+            <result property="yearIncome" column="year_income" jdbcType="DECIMAL"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="needLoan" column="need_loan" jdbcType="INTEGER"/>
+            <result property="intentionState" column="intention_state" jdbcType="INTEGER"/>
+            <result property="intentionProduct" column="intention_product" jdbcType="INTEGER"/>
+            <result property="state" column="state" jdbcType="INTEGER"/>
+            <result property="source" column="source" jdbcType="INTEGER"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="nextContactTime" column="next_contact_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,owner_id,activity_id,
+        full_name,appellation,phone,
+        weixin,qq,email,
+        age,job,year_income,
+        address,need_loan,intention_state,
+        intention_product,state,source,
+        description,next_contact_time,create_time,
+        create_by,edit_time,edit_by
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_clue
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+  
+  <resultMap id="clueDtoResultMap" type="com.biluo.model.dto.ClueDto">
+    <id property="id" column="id" jdbcType="INTEGER"/>
+    <result property="ownerId" column="owner_id" jdbcType="INTEGER"/>
+    <result property="ownerName" column="ownerName" jdbcType="VARCHAR"/>
+    <result property="activityId" column="activity_id" jdbcType="INTEGER"/>
+    <result property="activityName" column="activityName" jdbcType="VARCHAR"/>
+    <result property="fullName" column="full_name" jdbcType="VARCHAR"/>
+    <result property="appellation" column="appellation" jdbcType="INTEGER"/>
+    <result property="appellationName" column="appellationName" jdbcType="VARCHAR"/>
+    <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    <result property="weixin" column="weixin" jdbcType="VARCHAR"/>
+    <result property="qq" column="qq" jdbcType="VARCHAR"/>
+    <result property="email" column="email" jdbcType="VARCHAR"/>
+    <result property="age" column="age" jdbcType="INTEGER"/>
+    <result property="job" column="job" jdbcType="VARCHAR"/>
+    <result property="yearIncome" column="year_income" jdbcType="DECIMAL"/>
+    <result property="address" column="address" jdbcType="VARCHAR"/>
+    <result property="needLoan" column="need_loan" jdbcType="INTEGER"/>
+    <result property="needLoanName" column="needLoanName" jdbcType="VARCHAR"/>
+    <result property="intentionState" column="intention_state" jdbcType="INTEGER"/>
+    <result property="intentionStateName" column="intentionStateName" jdbcType="VARCHAR"/>
+    <result property="intentionProduct" column="intention_product" jdbcType="INTEGER"/>
+    <result property="intentionProductName" column="intentionProductName" jdbcType="VARCHAR"/>
+    <result property="state" column="state" jdbcType="INTEGER"/>
+    <result property="stateName" column="stateName" jdbcType="VARCHAR"/>
+    <result property="source" column="source" jdbcType="INTEGER"/>
+    <result property="sourceName" column="sourceName" jdbcType="VARCHAR"/>
+    <result property="description" column="description" jdbcType="VARCHAR"/>
+    <result property="nextContactTime" column="next_contact_time" jdbcType="TIMESTAMP"/>
+    <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+    <result property="createName" column="createName" jdbcType="VARCHAR"/>
+    <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+    <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+    <result property="editName" column="editName" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+	<select id="list" resultType="com.biluo.model.dto.ClueDto" resultMap="clueDtoResultMap">
+    select
+        tc.*,
+        tu.name as ownerName,
+        ta.name as activityName,
+        tdv1.type_value as appellationName,
+        tdv2.type_value as needLoanName,
+        tdv3.type_value as intentionStateName,
+        tp.name as intentionProductName,
+        tdv4.type_value as stateName,
+        tdv5.type_value as sourceName
+    from t_clue tc
+        left join t_user tu on tc.owner_id = tu.id
+        left join t_activity ta on tc.activity_id = ta.id
+        left join t_dic_value tdv1 on tc.appellation = tdv1.id
+        left join t_dic_value tdv2 on tc.need_loan = tdv2.id
+        left join t_dic_value tdv3 on tc.intention_state = tdv3.id
+        left join t_product tp on tc.intention_product = tp.id
+        left join t_dic_value tdv4 on tc.state = tdv4.id
+        left join t_dic_value tdv5 on tc.source = tdv5.id
+    <where>
+      ${filterSQL}
+    </where>
+  </select>
+  
+  <select id="countByPhone" resultType="java.lang.Integer">
+	  select count(1)
+	  from t_clue
+	  where phone = #{phone}
+  </select>
+  
+  <select id="getClueDetail" resultType="com.biluo.model.dto.ClueDto" resultMap="clueDtoResultMap">
+    select
+      tc.*,
+      tu.name as ownerName,
+      ta.name as activityName,
+      tdv1.type_value as appellationName,
+      tdv2.type_value as needLoanName,
+      tdv3.type_value as intentionStateName,
+      tp.name as intentionProductName,
+      tdv4.type_value as stateName,
+      tdv5.type_value as sourceName
+    from t_clue tc
+           left join t_user tu on tc.owner_id = tu.id
+           left join t_activity ta on tc.activity_id = ta.id
+           left join t_dic_value tdv1 on tc.appellation = tdv1.id
+           left join t_dic_value tdv2 on tc.need_loan = tdv2.id
+           left join t_dic_value tdv3 on tc.intention_state = tdv3.id
+           left join t_product tp on tc.intention_product = tp.id
+           left join t_dic_value tdv4 on tc.state = tdv4.id
+           left join t_dic_value tdv5 on tc.source = tdv5.id
+    where tc.id = #{id}
+  </select>
+  
+	<select id="count" resultType="java.lang.Integer">
+    select count(1) from t_clue
+  </select>
+  
+	<select id="selectSourceCountByClueSource" resultType="com.biluo.model.result.EchartsData">
+		select
+		    count(tc.source) as value,
+		    tdv.type_value as name
+		from t_clue tc
+			     left join t_dic_value tdv on tc.source = tdv.id
+    where tdv.type_value is not null
+		group by tc.source
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_clue
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TClue" useGeneratedKeys="true">
+        insert into t_clue
+        ( id,owner_id,activity_id
+        ,full_name,appellation,phone
+        ,weixin,qq,email
+        ,age,job,year_income
+        ,address,need_loan,intention_state
+        ,intention_product,state,source
+        ,description,next_contact_time,create_time
+        ,create_by,edit_time,edit_by
+        )
+        values (#{id,jdbcType=INTEGER},#{ownerId,jdbcType=INTEGER},#{activityId,jdbcType=INTEGER}
+        ,#{fullName,jdbcType=VARCHAR},#{appellation,jdbcType=INTEGER},#{phone,jdbcType=VARCHAR}
+        ,#{weixin,jdbcType=VARCHAR},#{qq,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}
+        ,#{age,jdbcType=INTEGER},#{job,jdbcType=VARCHAR},#{yearIncome,jdbcType=DECIMAL}
+        ,#{address,jdbcType=VARCHAR},#{needLoan,jdbcType=INTEGER},#{intentionState,jdbcType=INTEGER}
+        ,#{intentionProduct,jdbcType=INTEGER},#{state,jdbcType=INTEGER},#{source,jdbcType=INTEGER}
+        ,#{description,jdbcType=VARCHAR},#{nextContactTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}
+        ,#{createBy,jdbcType=INTEGER},#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TClue" useGeneratedKeys="true">
+        insert into t_clue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="ownerId != null">owner_id,</if>
+                <if test="activityId != null">activity_id,</if>
+                <if test="fullName != null">full_name,</if>
+                <if test="appellation != null">appellation,</if>
+                <if test="phone != null">phone,</if>
+                <if test="weixin != null">weixin,</if>
+                <if test="qq != null">qq,</if>
+                <if test="email != null">email,</if>
+                <if test="age != null">age,</if>
+                <if test="job != null">job,</if>
+                <if test="yearIncome != null">year_income,</if>
+                <if test="address != null">address,</if>
+                <if test="needLoan != null">need_loan,</if>
+                <if test="intentionState != null">intention_state,</if>
+                <if test="intentionProduct != null">intention_product,</if>
+                <if test="state != null">state,</if>
+                <if test="source != null">source,</if>
+                <if test="description != null">description,</if>
+                <if test="nextContactTime != null">next_contact_time,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="ownerId != null">#{ownerId,jdbcType=INTEGER},</if>
+                <if test="activityId != null">#{activityId,jdbcType=INTEGER},</if>
+                <if test="fullName != null">#{fullName,jdbcType=VARCHAR},</if>
+                <if test="appellation != null">#{appellation,jdbcType=INTEGER},</if>
+                <if test="phone != null">#{phone,jdbcType=VARCHAR},</if>
+                <if test="weixin != null">#{weixin,jdbcType=VARCHAR},</if>
+                <if test="qq != null">#{qq,jdbcType=VARCHAR},</if>
+                <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+                <if test="age != null">#{age,jdbcType=INTEGER},</if>
+                <if test="job != null">#{job,jdbcType=VARCHAR},</if>
+                <if test="yearIncome != null">#{yearIncome,jdbcType=DECIMAL},</if>
+                <if test="address != null">#{address,jdbcType=VARCHAR},</if>
+                <if test="needLoan != null">#{needLoan,jdbcType=INTEGER},</if>
+                <if test="intentionState != null">#{intentionState,jdbcType=INTEGER},</if>
+                <if test="intentionProduct != null">#{intentionProduct,jdbcType=INTEGER},</if>
+                <if test="state != null">#{state,jdbcType=INTEGER},</if>
+                <if test="source != null">#{source,jdbcType=INTEGER},</if>
+                <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+                <if test="nextContactTime != null">#{nextContactTime,jdbcType=TIMESTAMP},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+  
+  <insert id="insertBatch">
+	  insert into t_clue(owner_id, activity_id, full_name, appellation, phone, weixin, qq, email, age, job,
+	  year_income, address, need_loan, intention_state, intention_product, state, source, description,
+	  next_contact_time, create_time, create_by, edit_time, edit_by) values
+	  <foreach collection="clueList" item="clue" separator=",">
+		  (#{clue.ownerId}, #{clue.activityId}, #{clue.fullName}, #{clue.appellation}, #{clue.phone}, #{clue.weixin},
+		  #{clue.qq}, #{clue.email}, #{clue.age}, #{clue.job}, #{clue.yearIncome}, #{clue.address}, #{clue.needLoan},
+      #{clue.intentionState}, #{clue.intentionProduct}, #{clue.state}, #{clue.source}, #{clue.description},
+      #{clue.nextContactTime}, #{clue.createTime}, #{clue.createBy}, #{clue.editTime}, #{clue.editBy})
+	  </foreach>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TClue">
+        update t_clue
+        <set>
+                <if test="ownerId != null">
+                    owner_id = #{ownerId,jdbcType=INTEGER},
+                </if>
+                <if test="activityId != null">
+                    activity_id = #{activityId,jdbcType=INTEGER},
+                </if>
+                <if test="fullName != null">
+                    full_name = #{fullName,jdbcType=VARCHAR},
+                </if>
+                <if test="appellation != null">
+                    appellation = #{appellation,jdbcType=INTEGER},
+                </if>
+                <if test="phone != null">
+                    phone = #{phone,jdbcType=VARCHAR},
+                </if>
+                <if test="weixin != null">
+                    weixin = #{weixin,jdbcType=VARCHAR},
+                </if>
+                <if test="qq != null">
+                    qq = #{qq,jdbcType=VARCHAR},
+                </if>
+                <if test="email != null">
+                    email = #{email,jdbcType=VARCHAR},
+                </if>
+                <if test="age != null">
+                    age = #{age,jdbcType=INTEGER},
+                </if>
+                <if test="job != null">
+                    job = #{job,jdbcType=VARCHAR},
+                </if>
+                <if test="yearIncome != null">
+                    year_income = #{yearIncome,jdbcType=DECIMAL},
+                </if>
+                <if test="address != null">
+                    address = #{address,jdbcType=VARCHAR},
+                </if>
+                <if test="needLoan != null">
+                    need_loan = #{needLoan,jdbcType=INTEGER},
+                </if>
+                <if test="intentionState != null">
+                    intention_state = #{intentionState,jdbcType=INTEGER},
+                </if>
+                <if test="intentionProduct != null">
+                    intention_product = #{intentionProduct,jdbcType=INTEGER},
+                </if>
+                <if test="state != null">
+                    state = #{state,jdbcType=INTEGER},
+                </if>
+                <if test="source != null">
+                    source = #{source,jdbcType=INTEGER},
+                </if>
+                <if test="description != null">
+                    description = #{description,jdbcType=VARCHAR},
+                </if>
+                <if test="nextContactTime != null">
+                    next_contact_time = #{nextContactTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TClue">
+        update t_clue
+        set 
+            owner_id =  #{ownerId,jdbcType=INTEGER},
+            activity_id =  #{activityId,jdbcType=INTEGER},
+            full_name =  #{fullName,jdbcType=VARCHAR},
+            appellation =  #{appellation,jdbcType=INTEGER},
+            phone =  #{phone,jdbcType=VARCHAR},
+            weixin =  #{weixin,jdbcType=VARCHAR},
+            qq =  #{qq,jdbcType=VARCHAR},
+            email =  #{email,jdbcType=VARCHAR},
+            age =  #{age,jdbcType=INTEGER},
+            job =  #{job,jdbcType=VARCHAR},
+            year_income =  #{yearIncome,jdbcType=DECIMAL},
+            address =  #{address,jdbcType=VARCHAR},
+            need_loan =  #{needLoan,jdbcType=INTEGER},
+            intention_state =  #{intentionState,jdbcType=INTEGER},
+            intention_product =  #{intentionProduct,jdbcType=INTEGER},
+            state =  #{state,jdbcType=INTEGER},
+            source =  #{source,jdbcType=INTEGER},
+            description =  #{description,jdbcType=VARCHAR},
+            next_contact_time =  #{nextContactTime,jdbcType=TIMESTAMP},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>

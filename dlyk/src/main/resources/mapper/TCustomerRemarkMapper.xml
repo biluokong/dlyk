@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biluo.mapper.TCustomerRemarkMapper">
+
+    <resultMap id="BaseResultMap" type="com.biluo.model.po.TCustomerRemark">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+            <result property="noteWay" column="note_way" jdbcType="INTEGER"/>
+            <result property="noteContent" column="note_content" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="editBy" column="edit_by" jdbcType="INTEGER"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,customer_id,note_way,
+        note_content,create_by,create_time,
+        edit_time,edit_by,deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_customer_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_customer_remark
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TCustomerRemark" useGeneratedKeys="true">
+        insert into t_customer_remark
+        ( id,customer_id,note_way
+        ,note_content,create_by,create_time
+        ,edit_time,edit_by,deleted
+        )
+        values (#{id,jdbcType=INTEGER},#{customerId,jdbcType=INTEGER},#{noteWay,jdbcType=INTEGER}
+        ,#{noteContent,jdbcType=VARCHAR},#{createBy,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP}
+        ,#{editTime,jdbcType=TIMESTAMP},#{editBy,jdbcType=INTEGER},#{deleted,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.biluo.model.po.TCustomerRemark" useGeneratedKeys="true">
+        insert into t_customer_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="customerId != null">customer_id,</if>
+                <if test="noteWay != null">note_way,</if>
+                <if test="noteContent != null">note_content,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="editTime != null">edit_time,</if>
+                <if test="editBy != null">edit_by,</if>
+                <if test="deleted != null">deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="customerId != null">#{customerId,jdbcType=INTEGER},</if>
+                <if test="noteWay != null">#{noteWay,jdbcType=INTEGER},</if>
+                <if test="noteContent != null">#{noteContent,jdbcType=VARCHAR},</if>
+                <if test="createBy != null">#{createBy,jdbcType=INTEGER},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="editTime != null">#{editTime,jdbcType=TIMESTAMP},</if>
+                <if test="editBy != null">#{editBy,jdbcType=INTEGER},</if>
+                <if test="deleted != null">#{deleted,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.biluo.model.po.TCustomerRemark">
+        update t_customer_remark
+        <set>
+                <if test="customerId != null">
+                    customer_id = #{customerId,jdbcType=INTEGER},
+                </if>
+                <if test="noteWay != null">
+                    note_way = #{noteWay,jdbcType=INTEGER},
+                </if>
+                <if test="noteContent != null">
+                    note_content = #{noteContent,jdbcType=VARCHAR},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editTime != null">
+                    edit_time = #{editTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="editBy != null">
+                    edit_by = #{editBy,jdbcType=INTEGER},
+                </if>
+                <if test="deleted != null">
+                    deleted = #{deleted,jdbcType=INTEGER},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.biluo.model.po.TCustomerRemark">
+        update t_customer_remark
+        set 
+            customer_id =  #{customerId,jdbcType=INTEGER},
+            note_way =  #{noteWay,jdbcType=INTEGER},
+            note_content =  #{noteContent,jdbcType=VARCHAR},
+            create_by =  #{createBy,jdbcType=INTEGER},
+            create_time =  #{createTime,jdbcType=TIMESTAMP},
+            edit_time =  #{editTime,jdbcType=TIMESTAMP},
+            edit_by =  #{editBy,jdbcType=INTEGER},
+            deleted =  #{deleted,jdbcType=INTEGER}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
+</mapper>
