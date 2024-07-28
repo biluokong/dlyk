@@ -4,4 +4,6 @@
 
 gitee地址：https://gitee.com/biluoer/project
 
-注：前端项目代码使用的Vue3。
+注：
+  * 前端项目：dlyk-front（Vue3）
+  * 后端项目：dlyk
